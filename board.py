@@ -5,13 +5,18 @@ board = np.zeros((10,10))
 
 BOARD_SIZE = 10
 
+ships = []
+
 def random_board(number_of_ships):
     for i in range(0, number_of_ships):
-        ship_created = False
-        while not ship_created:
-            ship_created = make_ship(rand.randint(0,9), rand.randint(0,9), rand.randint(2,5))
+        created = ship_created([])
+        while not created:
+            new_ship = make_ship(rand.randint(0,9), rand.randint(0,9), rand.randint(2,5))
+            if ship_created(new_ship):
+                ships.append(new_ship)
+                created = True
 
-    print(board)
+    return board
 
 def make_ship(initial_pixel_x, initial_pixel_y, ship_size):
     orientation = rand.randint(0,1)
@@ -20,18 +25,20 @@ def make_ship(initial_pixel_x, initial_pixel_y, ship_size):
     print('make ship \n' + 'x: ' + str(initial_pixel_x) + '\ny: ' + str(initial_pixel_y) + '\nsize: ' + str(ship_size) + '\n orientarion: ' + str(orientation))
     if orientation == 0:
         if can_get_ship(initial_pixel_y, ship_size):
-            ship = get_horizontat_ship(initial_pixel_x, initial_pixel_y, ship_size)
+            ship = get_horizontal_ship(initial_pixel_x, initial_pixel_y, ship_size)
     else:
         if can_get_ship(initial_pixel_x, ship_size):
             ship = get_vertical_ship(initial_pixel_x, initial_pixel_y, ship_size)
 
-    if not haveShip(ship) and len(ship) > 0:
+    if not have_ship(ship) and len(ship) > 0:
         make_ship_in_board(ship)
-        return True
-    
-    return False
 
-def get_horizontat_ship(initial_pixel_x, initial_pixel_y, ship_size):
+    return ship
+
+def ship_created(ship):
+    return len(ship) > 0
+
+def get_horizontal_ship(initial_pixel_x, initial_pixel_y, ship_size):
     print('make horizontal ship ' + str(initial_pixel_y) + ' size: ' + str(ship_size))
     ship = []
     i = 0
@@ -58,9 +65,9 @@ def get_vertical_ship(initial_pixel_x, initial_pixel_y, ship_size):
     print(ship)
     return ship
 
-def haveShip(ship):
+def have_ship(ship):
     for ship_coordinate in ship:
-        if board[ship_coordinate[0]][ship_coordinate[1]] == 1:
+        if get_point(ship_coordinate[0], ship_coordinate[1]) == 1:
             return True
     
     return False
@@ -71,16 +78,65 @@ def make_ship_in_board(ship):
     for ship_coordinate in ship:
         print('index: of ' + str(ship_coordinate[0]) + ' ' + str(ship_coordinate[1]))
         print(ship.index((ship_coordinate[0], ship_coordinate[1])))
-        board[ship_coordinate[0]][ship_coordinate[1]] = 1
+        
+        set_point(ship_coordinate[0], ship_coordinate[1], 1)
 
 def can_get_ship(initial_pixel, ship_size):
     return initial_pixel + ship_size <= BOARD_SIZE
 
-def remove_pixel(ship, coordinates):
-    ship_index = ship.index((coordinates[0], coordinates[1]))
-    ship.remove(ship_index)
+def get_ship(x, y):
+    ship = []
+    for s in ships:
+        try:
+            print('SHIP')
+            print(s)
+            ship_index = s.index((x, y))
+            
+            print('FOUND SHIP: ' + str(ship_index))
+            return s
+        except:
+            print('ship is not in list: ' + str(x) + str(y))
+            print(s)
+    
+    return ship
 
-def ship_destroyed(ship):
+def remove_pixel_of_ship(ship, coordinates):
+    ship.remove(coordinates)
+
+    return is_ship_destroyed(ship)
+
+def ship_destroyed(x, y):
+    ship = get_ship(x, y)
+    return remove_pixel_of_ship(ship, (x, y))
+
+def is_ship_destroyed(ship):
     return len(ship) == 0
 
-random_board(2)
+def shot_ship(x, y):
+    if have_pixel(x, y):    
+        set_point(x, y, -1)
+        return True
+    else:
+        return False
+    
+def have_pixel(x, y):
+    print(board)
+    return get_point(x, y) == 1
+
+def print_board():
+    print(board)
+
+def set_point(x, y, value):
+    board[x][y] = value
+
+def get_point(x, y):
+    if valid_point(x, y):
+        return board[x][y]
+
+def valid_point(x, y):
+    return x < 10 and y < 10
+
+def initializeBoard(number_of_ships):
+    random_board(number_of_ships)
+
+
