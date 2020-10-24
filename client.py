@@ -26,7 +26,7 @@ def initializeBoard():
 
 def get_shot(msg):
     coordinates = msg.split(',')
-    print coordinates
+    print(coordinates)
 
     x = int(coordinates[0])
     y = int(coordinates[1])
@@ -49,14 +49,16 @@ board = initializeBoard()
 
 print('Para sair use CTRL+X\n')
 msg = ''
-while msg <> '\x18':
-    print 'Coordenada x'
-    x = raw_input()    
-    print 'Coordenada y'
-    y = raw_input()    
-    sock.send((x + ',' + y))
+while msg != '\x18':
+    print('Coordenada x')
+    x = input()    
+    print('Coordenada y') 
+    y = input()
+    
+    data = str(x) + ',' + str(y)    
+    sock.send(data.encode())
 
-    response = sock.recv(1024)
+    response = sock.recv(1024).decode("utf-8")
     
     print(response)
     print('BOARD CLIENT')

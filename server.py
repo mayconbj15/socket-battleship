@@ -28,18 +28,17 @@ def initializeServer():
 
 def get_shot(msg):
     coordinates = msg.split(',')
-    print coordinates
 
     x = int(coordinates[0])
     y = int(coordinates[1])
 
     return (x, y)
     
-def shot_ship(x, y):
-    return bd.shot_ship(x, y)
+def shot_ship(coordinates):
+    return bd.shot_ship(coordinates[0], coordinates[1])
 
-def check_ship_destroyed(x, y):
-    s_destroyed = bd.ship_destroyed(x, y)
+def check_ship_destroyed(coordinates):
+    s_destroyed = bd.ship_destroyed(coordinates[0],coordinates[1])
     if s_destroyed:
         print('SHIP DESTROYED')
 
@@ -47,7 +46,7 @@ def make_shot(random_shot, actual_shot=(0,0)):
     if random_shot:
         x = rand.randint(0,9)
         y = rand.randint(0,9)
-        return format_shot(x, y)
+        return format_shot((x,y))
     else:
         orientation = rand.randint(0,3)
         if orientation == 1:
@@ -59,32 +58,34 @@ def make_shot(random_shot, actual_shot=(0,0)):
         else:
             new_shot = make_new_shot(x - 1, y)
         
-        return format_shot(x, y)
+        return format_shot((x,y))
 
 def make_new_shot(x, y):
     if bd.valid_point(x,y):
         return (x,y)
 
-def format_shot(x, y):
-    return str(x) + ',' + str(y)
+def format_shot(coordinates):
+    return str(coordinates[0]) + ',' + str(coordinates[1])
 
 tcp = initializeServer()
 board = initializeBoard()
 
 while True:
     con, cliente = tcp.accept()
-    print 'Conectado por', cliente
+    print('Conectado por' + str(cliente))
     while True:
         msg = con.recv(1024)
         if not msg: 
             break
         
+        msg = msg.decode("utf-8")
+
         shot = get_shot(msg)
         
-        hit = shot_ship(shot[0], shot[1])
+        hit = shot_ship(shot)
         
         if hit:
-            ship_destroyed = check_ship_destroyed(shot[0], shot[1])
+            ship_destroyed = check_ship_destroyed(shot)
             if ship_destroyed:
                 shot = make_shot(False, shot)    
             else:
@@ -94,9 +95,8 @@ while True:
 
         print('BOARD SERVER')
         bd.print_board()
-        print cliente, msg
-        print con
-        con.sendall(shot)
+        
+        con.sendall(shot.encode())
     
-    print 'Finalizando conexao do cliente', cliente
+    print('Finalizando conexao do cliente' + str(cliente))
     con.close()
