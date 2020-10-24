@@ -9,7 +9,7 @@ HOST = ''              # Endereco IP do Servidor
 PORT = 5000            # Porta que o Servidor esta
 
 def initializeBoard():
-    bd.initializeBoard(4)
+    bd.initializeBoard(1)
     bd.print_board()
 
 def initializeServer():
@@ -34,14 +34,6 @@ def get_shot(msg):
 
     return (x, y)
     
-def shot_ship(coordinates):
-    return bd.shot_ship(coordinates[0], coordinates[1])
-
-def check_ship_destroyed(coordinates):
-    s_destroyed = bd.ship_destroyed(coordinates[0],coordinates[1])
-    if s_destroyed:
-        print('SHIP DESTROYED')
-
 def make_shot(random_shot, actual_shot=(0,0)):
     if random_shot:
         x = rand.randint(0,9)
@@ -68,7 +60,7 @@ def format_shot(coordinates):
     return str(coordinates[0]) + ',' + str(coordinates[1])
 
 tcp = initializeServer()
-board = initializeBoard()
+initializeBoard()
 
 while True:
     con, cliente = tcp.accept()
@@ -77,17 +69,21 @@ while True:
         msg = con.recv(1024)
         if not msg: 
             break
-        
+
         msg = msg.decode("utf-8")
 
         shot = get_shot(msg)
         
-        hit = shot_ship(shot)
+        hit = bd.shot_ship(shot[0], shot[1])
         
         if hit:
-            ship_destroyed = check_ship_destroyed(shot)
+            ship_destroyed =  bd.check_ship_destroyed(shot)
             if ship_destroyed:
-                shot = make_shot(False, shot)    
+                end_game = bd.check_end_game()
+                if not end_game:
+                    shot = make_shot(False, shot)
+                else:
+                    print('GAME FINISHED')    
             else:
                 shot = make_shot(True)
         else:
@@ -95,7 +91,7 @@ while True:
 
         print('BOARD SERVER')
         bd.print_board()
-        
+
         con.sendall(shot.encode())
     
     print('Finalizando conexao do cliente' + str(cliente))

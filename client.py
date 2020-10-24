@@ -21,7 +21,7 @@ def initializeClient():
         sys.exit()
 
 def initializeBoard():
-    bd.initializeBoard(4)
+    bd.initializeBoard(1)
     bd.print_board()
 
 def get_shot(msg):
@@ -33,19 +33,11 @@ def get_shot(msg):
 
     return (x, y)
 
-def shot_ship(x, y):
-    hit = bd.shot_ship(x, y)
-
-def check_ship_destroyed(x, y):
-    s_destroyed = bd.ship_destroyed(x, y)
-    if s_destroyed:
-        print('SHIP DESTROYED')
-
 def format_shot(x, y):
     return str(x) + ',' + str(y)
 
 sock = initializeClient()
-board = initializeBoard()
+initializeBoard()
 
 print('Para sair use CTRL+X\n')
 msg = ''
@@ -64,10 +56,17 @@ while msg != '\x18':
     print('BOARD CLIENT')
     bd.print_board()
 
-
+    print('response')
+    print(response)
     shot = get_shot(response)
-    hit = shot_ship(shot[0], shot[1])
+    hit = bd.shot_ship(shot[0], shot[1])
 
     if hit:
-        ship_destroyed = check_ship_destroyed(x,y)
-    #sock.close()
+        ship_destroyed = bd.check_ship_destroyed(shot)
+
+        if ship_destroyed:
+            print('SHIPT DESTROYED')
+            end_game = bd.check_end_game()
+            if end_game:
+                print('END OF GAME')
+                sock.close()
