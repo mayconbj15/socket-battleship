@@ -30,13 +30,13 @@ def initializeServer():
     get_arguments()
     try:
         print('Starting server')
-        tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        tcp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         orig = (args.host, args.port)
-        tcp.bind(orig)
-        tcp.listen(1)
+        tcp_sock.bind(orig)
+        tcp_sock.listen(1)
         print('Server connected')
 
-        return tcp
+        return sock_tp
     except:
         print('Connection failed')
         sys.exit()
@@ -79,11 +79,11 @@ def format_shot(coordinates):
     return str(coordinates[0]) + ',' + str(coordinates[1])
 
 
-tcp = initializeServer()
+tcp_sock = initializeServer()
 initializeBoard()
 
 while True:
-    con, cliente = tcp.accept()
+    con, cliente = tcp_sock.accept()
     print('Conectado por' + str(cliente))
     while True:
         try:

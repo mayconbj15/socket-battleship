@@ -26,7 +26,7 @@ def initializeClient():
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         print('Connecting to the server')
-        sock.connect((args.host, args.port))
+        tcp_sock.connect((args.host, args.port))
 
         print('Connection sucess!')
 
@@ -79,7 +79,7 @@ def send_data(data):
         bd.print_board()
         send = False
     elif data != '':
-        sock.send(data.encode())
+        tcp_sock.send(data.encode())
         send = True
     else:
         print('Invalid data. Send again')
@@ -88,7 +88,7 @@ def send_data(data):
     return send
 
 
-sock = initializeClient()
+tcp_sock = initializeClient()
 initializeBoard()
 
 print('Para sair use CTRL+X\n')
@@ -102,7 +102,7 @@ while msg != '\x18':
     send = send_data(data)
 
     if send:
-        response = sock.recv(1024).decode("utf-8")
+        response = tcp_sock.recv(1024).decode("utf-8")
 
         sucess = get_response_status(response)
 
@@ -121,6 +121,6 @@ while msg != '\x18':
                     end_game = bd.check_end_game()
                     if end_game:
                         print('END OF GAME')
-                        sock.close()
+                        tcp_sock.close()
         else:
             print('Server error')
