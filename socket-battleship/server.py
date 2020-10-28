@@ -36,7 +36,7 @@ def initializeServer():
         tcp_sock.listen(1)
         print('Server connected')
 
-        return sock_tp
+        return tcp_sock
     except:
         print('Connection failed')
         sys.exit()
@@ -67,7 +67,7 @@ def make_shot(random_shot, actual_shot=(0, 0)):
         else:
             new_shot = make_new_shot(x - 1, y)
 
-        return format_shot((x, y))
+        return format_shot(new_shot)
 
 
 def make_new_shot(x, y):
@@ -84,7 +84,7 @@ initializeBoard()
 
 while True:
     con, cliente = tcp_sock.accept()
-    print('Conectado por' + str(cliente))
+    print('Connected' + str(cliente))
     while True:
         try:
             msg = con.recv(1024)
@@ -119,5 +119,5 @@ while True:
         except:
             con.sendall('error'.encode())
 
-    print('Finalizando conexao do cliente' + str(cliente))
+    print('Closing connection' + str(cliente))
     con.close()

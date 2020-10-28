@@ -21,17 +21,34 @@ def get_arguments():
     args = parser.parse_args()
 
 
+def intialize_client():
+    udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    dest = (args.host, args.port)
+
+    return (udp, dest)
+
+
 get_arguments()
-udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-dest = (args.host, args.port)
+udp, dest = intialize_client()
 
-print('Para sair use CTRL+X\n')
-msg = input()
+print('Type "q" to exit\n')
+msg = ''
 
-while msg != '\x18':
+while msg != 'q':
+    print('Type the id of file')
+    msg = input()
     msg = helper.read_file('client_files/' + msg + '.txt')
 
-    udp.sendto(msg.encode(), dest)
+    response = udp.sendto(msg.encode(), dest)
+    if response == 0:
+        print('Error! Sending again')
+        response = udp.sendto(msg.encode(), dest)
+
+    msg, server = udp.recvfrom(1024)
+
+    print('Server response')
+    print(str(msg))
+
     msg = input()
 
 udp.close()
