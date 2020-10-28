@@ -11,6 +11,20 @@ global n_ships
 
 
 def random_board(number_of_ships):
+    """
+        Generate a random board with n ships
+
+        Parameters
+        ----------
+        number_of_ships: int
+            The number of ships in the board
+
+        Returns
+        -------
+        ndarray
+            An array with the ships marked 
+
+    """
     for i in range(0, number_of_ships):
         created = False
         while not created:
@@ -102,10 +116,32 @@ def make_ship_in_board(ship):
 
 
 def can_get_ship(initial_pixel, ship_size):
+    """
+        Check whether the dimension of ship is inside the board
+
+        Returns
+        -------
+        bool
+            If the ship dimension is inside the board
+    """
     return initial_pixel + ship_size <= BOARD_SIZE
 
 
 def get_ship(coordinates):
+    """
+        Get the ship in the coordinates
+
+        Parameters
+        ----------
+        coordinates: int
+            The coordinates of ship to be searched
+
+        Returns
+        -------
+        list
+            A list with the ship coordinates
+
+    """
     ship = []
     for s in ships:
         try:
@@ -119,6 +155,14 @@ def get_ship(coordinates):
 
 
 def check_ship_destroyed(coordinates):
+    """
+        Remove the coordinate of the attacked ship
+
+        Returns
+        -------
+        bool
+            If the ship has been destroyed
+    """
     ship = get_ship(coordinates)
     ship.remove(coordinates)
     ship_destroyed = is_ship_destroyed(ship)
@@ -131,14 +175,31 @@ def check_ship_destroyed(coordinates):
 
 
 def check_end_game():
+    """Checks the end of game"""
     return n_ships == 0
 
 
 def is_ship_destroyed(ship):
+    """
+        Checks whether the ship was destroyed
+
+        Returns
+        -------
+        bool
+            If the ship was destroyed
+    """
     return len(ship) == 0
 
 
 def shot_ship(x, y):
+    """
+        Remove the pixel of ship
+
+        Returns
+        -------
+        bool
+            If the pixel is removed
+    """
     if have_pixel(x, y):
         set_point(x, y, -1)
         return True
@@ -147,24 +208,49 @@ def shot_ship(x, y):
 
 
 def have_pixel(x, y):
-    print(board)
+    """
+        Check if the point in the x,y coordinate is equal to 1
+
+        Returns
+        -------
+        bool
+            If the point is equal to 1
+    """
     return get_point(x, y) == 1
 
 
 def print_board():
+    """Print the board"""
     print(board)
 
 
 def set_point(x, y, value):
+    """Set a point in x,y coordinate with value"""
     board[x][y] = value
 
 
 def get_point(x, y):
+    """
+        Get a point of board in x,y coordinate
+
+        Returns
+        -------
+        int 
+            A point of the board
+    """
     if valid_point(x, y):
         return board[x][y]
 
 
 def valid_point(x, y):
+    """
+        Checks if determined coordinate is valid in board dimensions
+
+        Returns
+        -------
+        bool 
+            If the coordinate is in board dimensions
+    """
     return x < 10 and y < 10
 
 

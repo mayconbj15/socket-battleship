@@ -7,6 +7,7 @@ global args
 
 
 def get_arguments():
+    """A function to get arguments pass by command line"""
     parser = argparse.ArgumentParser(
         description='Battleship tcp socket')
 
@@ -22,6 +23,7 @@ def get_arguments():
 
 
 def intialize_client():
+    """A function to initialize a socket with the udp protocol"""
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     dest = (args.host, args.port)
 
@@ -30,7 +32,7 @@ def intialize_client():
 
 get_arguments()
 udp, dest = intialize_client()
-
+help(intialize_client)
 print('Type "q" to exit\n')
 msg = ''
 
