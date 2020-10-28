@@ -111,7 +111,7 @@ while msg != '\x18':
                 bd.print_board()
 
             shot = get_shot(response)
-            hit = bd.shot_ship(shot[0], shot[1])
+            hit = bd.shot_ship(shot)
 
             if hit:
                 ship_destroyed = bd.check_ship_destroyed(shot)

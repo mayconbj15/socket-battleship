@@ -59,20 +59,20 @@ def make_shot(random_shot, actual_shot=(0, 0)):
     else:
         orientation = rand.randint(0, 3)
         if orientation == 1:
-            new_shot = make_new_shot(x, y + 1)
+            new_shot = make_new_shot((x, y + 1))
         elif orientation == 2:
-            new_shot = make_new_shot(x + 1, y)
+            new_shot = make_new_shot((x + 1, y))
         elif orientation == 3:
-            new_shot = make_new_shot(x, y - 1)
+            new_shot = make_new_shot((x, y - 1))
         else:
-            new_shot = make_new_shot(x - 1, y)
+            new_shot = make_new_shot((x - 1, y))
 
         return format_shot(new_shot)
 
 
-def make_new_shot(x, y):
-    if bd.valid_point(x, y):
-        return (x, y)
+def make_new_shot(coordinate):
+    if bd.valid_point(coordinate):
+        return coordinate
 
 
 def format_shot(coordinates):
@@ -95,7 +95,7 @@ while True:
 
             shot = get_shot(msg)
 
-            hit = bd.shot_ship(shot[0], shot[1])
+            hit = bd.shot_ship(shot)
 
             if hit:
                 ship_destroyed = bd.check_ship_destroyed(shot)

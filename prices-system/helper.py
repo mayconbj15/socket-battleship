@@ -5,10 +5,20 @@ def read_file(path):
     """
         Read a file in the path
 
+        Parameters
+        ----------
+        path: str
+            The path of the file 
+
         Returns
         -------
         str
             A normalized string with the file data
+
+        Raises
+        -------
+        FileNotFoundError
+            If the file don't exists in the path
     """
     msg = ''
     try:
