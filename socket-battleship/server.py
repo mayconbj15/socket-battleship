@@ -27,7 +27,7 @@ def initializeBoard():
 
 
 def initializeServer():
-    get_arguments()
+    """Initialize a socket with the TCP protocol"""
     try:
         print('Starting server')
         tcp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -43,6 +43,19 @@ def initializeServer():
 
 
 def get_shot(msg):
+    """
+        Get the coordinates in the message
+
+        Parameters
+        ----------
+        msg: str
+            A message with the format (msg1, msg2), ex: 2,3
+
+        Returns
+        -------
+        tuple
+            A tuple with the int value of the msg1 and msg2
+    """
     coordinates = msg.split(',')
 
     x = int(coordinates[0])
@@ -52,12 +65,28 @@ def get_shot(msg):
 
 
 def make_shot(random_shot, actual_shot=(0, 0)):
+    """
+        Make a new shot to send to client
+
+        Parameters
+        ----------
+        random_shot: bool
+            If the new shot is random
+        actual_shot: tuple
+            The actual shot of server
+
+        Returns
+        -------
+        tuple
+            A new shot to be send to the client
+    """
     if random_shot:
         x = rand.randint(0, 9)
         y = rand.randint(0, 9)
         return format_shot((x, y))
     else:
         orientation = rand.randint(0, 3)
+        new_shot = ((rand.randint(0, 9), rand.randint(0, 9)))
         if orientation == 1:
             new_shot = make_new_shot((x, y + 1))
         elif orientation == 2:
@@ -71,14 +100,41 @@ def make_shot(random_shot, actual_shot=(0, 0)):
 
 
 def make_new_shot(coordinate):
+    """
+        Returns the coordinate if it's valid
+
+        Parameters
+        ----------
+        coordinate: str
+            The coordinate to be checked
+
+        Returns
+        tuple
+            The same coordinate if it's valid
+    """
     if bd.valid_point(coordinate):
         return coordinate
 
 
 def format_shot(coordinates):
+    """
+        Format the x, y values to a string
+
+        Parameters
+        ----------
+        x: int
+            The x value of the shot
+        y: int
+            The y value of the shot
+
+        Returns
+        -------
+        A formated string with the format "x,y"
+    """
     return str(coordinates[0]) + ',' + str(coordinates[1])
 
 
+get_arguments()
 tcp_sock = initializeServer()
 initializeBoard()
 
@@ -106,6 +162,7 @@ while True:
                         shot = make_shot(False, shot)
                     else:
                         print('GAME FINISHED')
+                        con.sendall('you win'.encode())
                 else:
                     shot = make_shot(True)
             else:

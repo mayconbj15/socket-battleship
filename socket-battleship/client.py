@@ -20,28 +20,50 @@ def get_arguments():
 
 
 def initializeClient():
-    get_arguments()
+    """Initialize a socket with the TCP protocol"""
     try:
         print('Creating socket')
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        tcp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         print('Connecting to the server')
         tcp_sock.connect((args.host, args.port))
 
         print('Connection sucess!')
 
-        return sock
+        return tcp_sock
     except:
         print('Failed to create connection')
         sys.exit()
 
 
-def initializeBoard():
-    bd.board_file('board.txt')
+def initializeBoard(number_of_ships):
+    """
+        Initialize a board with n ships
+
+        Parameters
+        ----------
+        number_of_ships: int
+            The number of ships
+    """
+    # bd.board_file('board.txt')
+    bd.initializeBoard(number_of_ships)
     bd.print_board()
 
 
 def get_shot(msg):
+    """
+        Get the coordinates in the message
+
+        Parameters
+        ----------
+        msg: str
+            A message with the format (msg1, msg2), ex: 2,3
+
+        Returns
+        -------
+        tuple
+            A tuple with the int value of the msg1 and msg2
+    """
     coordinates = msg.split(',')
     print(coordinates)
 
@@ -52,12 +74,40 @@ def get_shot(msg):
 
 
 def format_shot(x, y):
+    """
+        Format the x, y values to a string
+
+        Parameters
+        ----------
+        x: int
+            The x value of the shot
+        y: int
+            The y value of the shot
+
+        Returns
+        -------
+        A formated string with the format "x,y"
+    """
     return str(x) + ',' + str(y)
 
 
 def get_data(inp):
+    """
+        Validate and return a normalized string
+
+        Parameters
+        ----------
+        inp: str
+            The input send by user
+
+        Returns
+        -------
+        str
+            A normalized string if the inp is valid
+            A empty string if the inp is not valid
+    """
     if len(inp) == 1:
-        return inp
+        return ''
     elif len(inp) > 1:
         data = inp.split(' ')
         print(data)
@@ -67,6 +117,19 @@ def get_data(inp):
 
 
 def get_response_status(response):
+    """
+        Verify the response of the server
+
+        Parameters
+        ----------
+        response: str
+            The response of the server
+
+        Returns
+        -------
+        bool 
+            If the response have error    
+    """
     if response == 'error':
         return False
     else:
@@ -74,6 +137,19 @@ def get_response_status(response):
 
 
 def send_data(data):
+    """
+        Send data to server
+
+        Parameters
+        ----------
+        data: str
+            The data that'll be send to server
+
+        Returns
+        -------
+        bool
+            If the data was send
+    """
     send = False
     if data == 'p' or data == 'P':
         bd.print_board()
@@ -88,39 +164,43 @@ def send_data(data):
     return send
 
 
+get_arguments()
 tcp_sock = initializeClient()
-initializeBoard()
+initializeBoard(1)
 
-print('Para sair use CTRL+X\n')
+print('Type "q" to exit\n')
 msg = ''
-while msg != '\x18':
+while msg != 'q':
     print('Enter the input to the server')
     inp = input()
 
     data = get_data(inp)
 
-    send = send_data(data)
+    if data:
+        send = send_data(data)
 
-    if send:
-        response = tcp_sock.recv(1024).decode("utf-8")
+        if send:
+            response = tcp_sock.recv(1024).decode("utf-8")
 
-        sucess = get_response_status(response)
+            sucess = get_response_status(response)
 
-        if sucess:
-            if args.debug:
-                bd.print_board()
+            if sucess:
+                if args.debug:
+                    bd.print_board()
 
-            shot = get_shot(response)
-            hit = bd.shot_ship(shot)
+                shot = get_shot(response)
+                hit = bd.shot_ship(shot)
 
-            if hit:
-                ship_destroyed = bd.check_ship_destroyed(shot)
+                if hit:
+                    ship_destroyed = bd.check_ship_destroyed(shot)
 
-                if ship_destroyed:
-                    print('SHIP DESTROYED')
-                    end_game = bd.check_end_game()
-                    if end_game:
-                        print('END OF GAME')
-                        tcp_sock.close()
-        else:
-            print('Server error')
+                    if ship_destroyed:
+                        print('SHIP DESTROYED')
+                        end_game = bd.check_end_game()
+                        if end_game:
+                            print('END OF GAME')
+                            tcp_sock.close()
+            else:
+                print('Server error')
+    else:
+        print('Format of input invalid')

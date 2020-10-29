@@ -22,7 +22,7 @@ def random_board(number_of_ships):
         Returns
         -------
         ndarray
-            An array with the ships marked 
+            An array with the ships marked
 
     """
     for i in range(0, number_of_ships):
@@ -46,7 +46,7 @@ def board_file(filepath):
         Parameters
         ----------
         filepath: string
-            Path file 
+            Path file
     """
     f = open(filepath)
 
@@ -103,10 +103,10 @@ def ship_created(ship):
         ----------
         ship: list
             The ship that'll be checked
-            
+
         Returns
         -------
-        bool 
+        bool
             If the ship was created
     """
     return len(ship) > 0
@@ -124,7 +124,7 @@ def get_horizontal_ship(initial_pixel_x, initial_pixel_y, ship_size):
             The initial y coordinate of the ship
         ship_size: int
             The ship size
-        
+
         Returns
         -------
         list
@@ -141,7 +141,7 @@ def get_horizontal_ship(initial_pixel_x, initial_pixel_y, ship_size):
 
 
 def get_vertical_ship(initial_pixel_x, initial_pixel_y, ship_size):
-     """
+    """
         Get a list with the representation of a vertical ship
 
         Parameters
@@ -152,7 +152,7 @@ def get_vertical_ship(initial_pixel_x, initial_pixel_y, ship_size):
             The initial y coordinate of the ship
         ship_size: int
             The ship size
-        
+
         Returns
         -------
         list
@@ -268,7 +268,7 @@ def check_ship_destroyed(coordinates):
     ship_destroyed = is_ship_destroyed(ship)
 
     if ship_destroyed:
-        #global n_ships
+        # global n_ships
         n_ships = n_ships - 1
 
     return ship_destroyed
@@ -294,7 +294,7 @@ def is_ship_destroyed(ship):
         ----------
         ship: list
             The ship that'll been checked
-        
+
         Returns
         -------
         bool
@@ -354,7 +354,7 @@ def set_point(coordinates, value):
         ----------
         coordinates: tuple
             The coordinates of the point
-        
+
         value: int
             The value of the point
     """
@@ -364,7 +364,7 @@ def set_point(coordinates, value):
 def get_point(coordinates):
     """
         Get a point of board in a coordinate
-        
+
         Parameters
         coordinates: tuple
             The pixel coordinates

@@ -32,7 +32,7 @@ def intialize_client():
 
 get_arguments()
 udp, dest = intialize_client()
-help(intialize_client)
+
 print('Type "q" to exit\n')
 msg = ''
 

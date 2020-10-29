@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>board.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>board.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rand</span>
+
+<span class="n">board</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">BOARD_SIZE</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">ships</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">global</span> <span class="n">n_ships</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Generate a random board with n ships</p>
+<p>Parameters</p>
+<hr />
+<p>number_of_ships: int
+       The number of ships in the board</p>
+<p>Returns</p>
+<hr />
+<p>ndarray
+       An array with the ships marked</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">random_board</span><span class="p">(</span><span class="n">number_of_ships</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">number_of_ships</span><span class="p">):</span>
+        <span class="n">created</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">created</span><span class="p">:</span>
+            <span class="n">new_ship</span> <span class="o">=</span> <span class="n">make_ship</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
+                <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">ship_created</span><span class="p">(</span><span class="n">new_ship</span><span class="p">):</span>
+                <span class="n">ships</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_ship</span><span class="p">)</span>
+                <span class="n">created</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">global</span> <span class="n">n_ships</span>
+    <span class="n">n_ships</span> <span class="o">=</span> <span class="n">number_of_ships</span>
+
+    <span class="k">return</span> <span class="n">board</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Open a file that describes the ship positions in the board</p>
+<p>Parameters</p>
+<hr />
+<p>filepath: string
+       Path file</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">board_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">ship_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ship_size</span> <span class="o">*</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">set_point</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">4</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Set a ship with a size in the board</p>
+<p>Parameters</p>
+<hr />
+<p>initial_pixel_x: int
+       The initial x coordinate of the ship
+   initial_pixel_y: int
+       The initial y coordinate of the ship
+   ship_size: int
+       The ship size</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">make_ship</span><span class="p">(</span><span class="n">initial_pixel_x</span><span class="p">,</span> <span class="n">initial_pixel_y</span><span class="p">,</span> <span class="n">ship_size</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">orientation</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ship</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">orientation</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">can_get_ship</span><span class="p">(</span><span class="n">initial_pixel_y</span><span class="p">,</span> <span class="n">ship_size</span><span class="p">):</span>
+            <span class="n">ship</span> <span class="o">=</span> <span class="n">get_horizontal_ship</span><span class="p">(</span>
+                <span class="n">initial_pixel_x</span><span class="p">,</span> <span class="n">initial_pixel_y</span><span class="p">,</span> <span class="n">ship_size</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">can_get_ship</span><span class="p">(</span><span class="n">initial_pixel_x</span><span class="p">,</span> <span class="n">ship_size</span><span class="p">):</span>
+            <span class="n">ship</span> <span class="o">=</span> <span class="n">get_vertical_ship</span><span class="p">(</span>
+                <span class="n">initial_pixel_x</span><span class="p">,</span> <span class="n">initial_pixel_y</span><span class="p">,</span> <span class="n">ship_size</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">have_ship</span><span class="p">(</span><span class="n">ship</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ship</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">make_ship_in_board</span><span class="p">(</span><span class="n">ship</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ship</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Check whether the ship was created</p>
+<p>Parameters</p>
+<hr />
+<p>ship: list
+       The ship that&rsquo;ll be checked</p>
+<p>Returns</p>
+<hr />
+<p>bool
+       If the ship was created</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">ship_created</span><span class="p">(</span><span class="n">ship</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">ship</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Get a list with the representation of a horizontal ship</p>
+<p>Parameters</p>
+<hr />
+<p>initial_pixel_x: int
+       The initial x coordinate of the ship
+   initial_pixel_y: int
+       The initial y coordinate of the ship
+   ship_size: int
+       The ship size</p>
+<p>Returns</p>
+<hr />
+<p>list
+       A representation of a ship</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">get_horizontal_ship</span><span class="p">(</span><span class="n">initial_pixel_x</span><span class="p">,</span> <span class="n">initial_pixel_y</span><span class="p">,</span> <span class="n">ship_size</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">ship</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ship_size</span><span class="p">:</span>
+        <span class="n">ship</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">initial_pixel_x</span><span class="p">,</span> <span class="n">initial_pixel_y</span><span class="p">))</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">initial_pixel_y</span> <span class="o">=</span> <span class="n">initial_pixel_y</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">ship</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Get a list with the representation of a vertical ship</p>
+<p>Parameters</p>
+<hr />
+<p>initial_pixel_x: int
+       The initial x coordinate of the ship
+   initial_pixel_y: int
+       The initial y coordinate of the ship
+   ship_size: int
+       The ship size</p>
+<p>Returns</p>
+<hr />
+<p>list
+       A representation of a ship</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">get_vertical_ship</span><span class="p">(</span><span class="n">initial_pixel_x</span><span class="p">,</span> <span class="n">initial_pixel_y</span><span class="p">,</span> <span class="n">ship_size</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ship</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ship_size</span><span class="p">:</span>
+        <span class="n">ship</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">initial_pixel_x</span><span class="p">,</span> <span class="n">initial_pixel_y</span><span class="p">))</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">initial_pixel_x</span> <span class="o">=</span> <span class="n">initial_pixel_x</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">ship</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Checks if the ship exists in the board</p>
+<p>Parameters</p>
+<hr />
+<p>ship: list
+       The list with the ship coordinates</p>
+<p>Returns</p>
+<hr />
+<p>bool
+       If the ship exists in the board</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">have_ship</span><span class="p">(</span><span class="n">ship</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">ship_coordinate</span> <span class="ow">in</span> <span class="n">ship</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">get_point</span><span class="p">(</span><span class="n">ship_coordinate</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Set a ship in the board</p>
+<p>Parameters</p>
+<hr />
+<p>ship: list
+       A representation of the ship</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">make_ship_in_board</span><span class="p">(</span><span class="n">ship</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">ship_coordinate</span> <span class="ow">in</span> <span class="n">ship</span><span class="p">:</span>
+        <span class="n">set_point</span><span class="p">(</span><span class="n">ship_coordinate</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>Check whether the dimension of ship is inside the board</p>
+<p>Parameters</p>
+<hr />
+<p>initial_pixel: int
+       The initial pixel of the ship
+   ship_size: int
+       The size of the ship</p>
+<p>Returns</p>
+<hr />
+<p>bool
+       If the ship dimension is inside the board</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">can_get_ship</span><span class="p">(</span><span class="n">initial_pixel</span><span class="p">,</span> <span class="n">ship_size</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">initial_pixel</span> <span class="o">+</span> <span class="n">ship_size</span> <span class="o">&lt;=</span> <span class="n">BOARD_SIZE</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Get the ship in the coordinates</p>
+<p>Parameters</p>
+<hr />
+<p>coordinates: int
+       The coordinates of ship to be searched</p>
+<p>Returns</p>
+<hr />
+<p>list
+       A list with the ship coordinates</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">get_ship</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">ship</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">ships</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">s</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">ship</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>Remove the coordinate of the attacked ship</p>
+<p>Parameters</p>
+<hr />
+<p>coordinates: tuple
+       The shot coordinates</p>
+<p>Returns</p>
+<hr />
+<p>bool
+       If the ship has been destroyed</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_ship_destroyed</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">ship</span> <span class="o">=</span> <span class="n">get_ship</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+    <span class="n">ship</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+    <span class="n">ship_destroyed</span> <span class="o">=</span> <span class="n">is_ship_destroyed</span><span class="p">(</span><span class="n">ship</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ship_destroyed</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>global n_ships</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">n_ships</span> <span class="o">=</span> <span class="n">n_ships</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">ship_destroyed</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>Checks the end of game</p>
+<p>Returns</p>
+<hr />
+<p>bool
+       If the number of ships is equal to zero</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_end_game</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">n_ships</span> <span class="o">==</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>Checks whether the ship was destroyed</p>
+<p>Parameters</p>
+<hr />
+<p>ship: list
+       The ship that&rsquo;ll been checked</p>
+<p>Returns</p>
+<hr />
+<p>bool
+       If the ship was destroyed</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">is_ship_destroyed</span><span class="p">(</span><span class="n">ship</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">ship</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>Remove the pixel of ship</p>
+<p>Parameters</p>
+<hr />
+<p>coordinates: tuple
+       The coordinates of the shot</p>
+<p>Returns</p>
+<hr />
+<p>bool
+       If the pixel is removed</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">shot_ship</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">have_pixel</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span>
+        <span class="n">set_point</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>Check if the point in the x,y coordinate is equal to 1</p>
+<p>Parameters</p>
+<hr />
+<p>coordinates: tuple
+       The coordinates of pixel</p>
+<p>Returns</p>
+<hr />
+<p>bool
+       If the point is equal to 1</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">have_pixel</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">get_point</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      <p>Print the board</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">print_board</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nb">print</span><span class="p">(</span><span class="n">board</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-34'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      <p>Set a point in coordinates with a value</p>
+<p>Parameters</p>
+<hr />
+<p>coordinates: tuple
+       The coordinates of the point</p>
+<p>value: int
+       The value of the point</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">set_point</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-35'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">board</span><span class="p">[</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      <p>Get a point of board in a coordinate</p>
+<p>Parameters
+   coordinates: tuple
+       The pixel coordinates</p>
+<p>Returns</p>
+<hr />
+<p>int 
+       A point of the board</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">get_point</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">valid_point</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">board</span><span class="p">[</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-38'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-38'>#</a>
+      </div>
+      <p>Checks if determined coordinate is valid in board dimensions</p>
+<p>Returns</p>
+<hr />
+<p>bool 
+       If the coordinate is in board dimensions</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">valid_point</span><span class="p">(</span><span class="n">coordinate</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">coordinate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="ow">and</span> <span class="n">coordinate</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">10</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">initializeBoard</span><span class="p">(</span><span class="n">number_of_ships</span><span class="p">):</span>
+    <span class="n">random_board</span><span class="p">(</span><span class="n">number_of_ships</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

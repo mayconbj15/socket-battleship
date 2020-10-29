@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>server.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>server.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rand</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">board</span> <span class="k">as</span> <span class="nn">bd</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">get_arguments</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Battleship tcp socket&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--debug&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;n&quot;</span><span class="p">,</span>
+                        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Run in debug mode that print board of server&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--host&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The host of server&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--port&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;port&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The port of server&quot;</span><span class="p">)</span>
+
+    <span class="k">global</span> <span class="n">args</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">initializeBoard</span><span class="p">():</span>
+    <span class="n">bd</span><span class="o">.</span><span class="n">initializeBoard</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">bd</span><span class="o">.</span><span class="n">print_board</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Initialize a socket with the TCP protocol</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">initializeServer</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Starting server&#39;</span><span class="p">)</span>
+        <span class="n">tcp_sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+        <span class="n">orig</span> <span class="o">=</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+        <span class="n">tcp_sock</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">orig</span><span class="p">)</span>
+        <span class="n">tcp_sock</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Server connected&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tcp_sock</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Connection failed&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Get the coordinates in the message</p>
+<p>Parameters</p>
+<hr />
+<p>msg: str
+       A message with the format (msg1, msg2), ex: 2,3</p>
+<p>Returns</p>
+<hr />
+<p>tuple
+       A tuple with the int value of the msg1 and msg2</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">get_shot</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Make a new shot to send to client</p>
+<p>Parameters</p>
+<hr />
+<p>random_shot: bool
+       If the new shot is random
+   actual_shot: tuple
+       The actual shot of server</p>
+<p>Returns</p>
+<hr />
+<p>tuple
+       A new shot to be send to the client</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">make_shot</span><span class="p">(</span><span class="n">random_shot</span><span class="p">,</span> <span class="n">actual_shot</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">random_shot</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">format_shot</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">orientation</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">new_shot</span> <span class="o">=</span> <span class="p">((</span><span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">rand</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">orientation</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">new_shot</span> <span class="o">=</span> <span class="n">make_new_shot</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">orientation</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">new_shot</span> <span class="o">=</span> <span class="n">make_new_shot</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">orientation</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">new_shot</span> <span class="o">=</span> <span class="n">make_new_shot</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_shot</span> <span class="o">=</span> <span class="n">make_new_shot</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">format_shot</span><span class="p">(</span><span class="n">new_shot</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Returns the coordinate if it&rsquo;s valid</p>
+<p>Parameters</p>
+<hr />
+<p>coordinate: str
+       The coordinate to be checked</p>
+<p>Returns
+   tuple
+       The same coordinate if it&rsquo;s valid</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">make_new_shot</span><span class="p">(</span><span class="n">coordinate</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="n">bd</span><span class="o">.</span><span class="n">valid_point</span><span class="p">(</span><span class="n">coordinate</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">coordinate</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Format the x, y values to a string</p>
+<p>Parameters</p>
+<hr />
+<p>x: int
+       The x value of the shot
+   y: int
+       The y value of the shot</p>
+<p>Returns</p>
+<hr />
+<p>A formated string with the format &ldquo;x,y&rdquo;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">format_shot</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+
+<span class="n">get_arguments</span><span class="p">()</span>
+<span class="n">tcp_sock</span> <span class="o">=</span> <span class="n">initializeServer</span><span class="p">()</span>
+<span class="n">initializeBoard</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">con</span><span class="p">,</span> <span class="n">cliente</span> <span class="o">=</span> <span class="n">tcp_sock</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Connected&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cliente</span><span class="p">))</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">msg</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+            <span class="n">shot</span> <span class="o">=</span> <span class="n">get_shot</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="n">hit</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">shot_ship</span><span class="p">(</span><span class="n">shot</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">hit</span><span class="p">:</span>
+                <span class="n">ship_destroyed</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">check_ship_destroyed</span><span class="p">(</span><span class="n">shot</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ship_destroyed</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SHIP DESTROYED&#39;</span><span class="p">)</span>
+                    <span class="n">end_game</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">check_end_game</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">end_game</span><span class="p">:</span>
+                        <span class="n">shot</span> <span class="o">=</span> <span class="n">make_shot</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">shot</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;GAME FINISHED&#39;</span><span class="p">)</span>
+                        <span class="n">con</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="s1">&#39;you win&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">shot</span> <span class="o">=</span> <span class="n">make_shot</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">shot</span> <span class="o">=</span> <span class="n">make_shot</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;BOARD SERVER&#39;</span><span class="p">)</span>
+                <span class="n">bd</span><span class="o">.</span><span class="n">print_board</span><span class="p">()</span>
+
+            <span class="n">con</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">shot</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Closing connection&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cliente</span><span class="p">))</span>
+    <span class="n">con</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

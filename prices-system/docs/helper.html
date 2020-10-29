@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>helper.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>helper.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Read a file in the path</p>
+<p>Parameters</p>
+<hr />
+<p>path: str
+       The path of the file </p>
+<p>Returns</p>
+<hr />
+<p>str
+       A normalized string with the file data</p>
+<p>Raises</p>
+<hr />
+<p>FileNotFoundError
+       If the file don&rsquo;t exists in the path</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="n">path</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;File not found: &#39;</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">normalize_list_str</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Saves a file with format</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <pre><code>str(p1) int(p2)
+int(p3) float(p4) int(p5) int(p6)
+
+Where:
+str(p1) = The type of file. D for data and P for search
+int(p2) = The id of file
+int(p3) = The gas type: 0 - diesel, 1 - álcool, 2 - gasolina
+float(p4) = The price of the gas
+int(p5) = The latitude of gas station
+int(p6) = The longitude of gas station
+
+The name of file is equal 'str(p1) + int(p2)'
+
+Parameters
+----------
+data: list
+    The list of values to save in file
+path: str
+    The path where the file will be saved
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="n">file_type</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">gas_station_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">txt</span> <span class="o">+=</span> <span class="n">file_type</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+        <span class="n">txt</span> <span class="o">+=</span> <span class="n">gas_station_id</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">file_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="k">while</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">:</span>
+                <span class="n">file_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">txt</span> <span class="o">+=</span> <span class="n">file_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">file_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="n">file_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+            <span class="n">txt</span> <span class="o">+=</span> <span class="n">file_data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="n">txt</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+            <span class="n">file_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">4</span>
+
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;D&#39;</span> <span class="o">+</span> <span class="n">gas_station_id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error to write file&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Search for the cheapset fuel in the gas stations in the data file with the file_id</p>
+<p>Parameters:</p>
+<hr />
+<p>file_id: int
+       The id of the data file
+   gas_type: int
+       The type of the gas in the search
+   radius: int
+       The search radius
+   latitude: int
+       The gas station latitude
+   longitude: int
+       The gas station longitude</p>
+<p>Returns:</p>
+<hr />
+<p>float
+       The cheapest fuel in the gas station list</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">search_cheap</span><span class="p">(</span><span class="n">file_id</span><span class="p">,</span> <span class="n">gas_type</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="s1">&#39;server_files/&#39;</span> <span class="o">+</span> <span class="s1">&#39;D&#39;</span> <span class="o">+</span> <span class="n">file_id</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">cheap</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">file_data</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="k">while</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">:</span>
+                    <span class="n">file_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                    <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">if</span> <span class="n">file_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">gas_type</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">in_radius</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">radius</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">latitude</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">longitude</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">file_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">file_data</span><span class="p">[</span><span class="mi">3</span><span class="p">])):</span>
+                        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">file_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">cheap</span><span class="p">:</span>
+                            <span class="n">cheap</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">file_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                <span class="n">file_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">4</span>
+
+            <span class="k">return</span> <span class="n">cheap</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error in search&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">return</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Defines wheter a latitude is in the search radius</p>
+<p>Parameters:</p>
+<hr />
+<p>radius: int
+       The search radius
+   latitude_center: int
+       The central latitude of search 
+   longitude_center: int
+       The central longitude of search 
+   gas_latitude: int
+       The gas station latitude
+   gas_longitude: int
+       The gas station longitude</p>
+<p>Returns:</p>
+<hr />
+<p>bool
+       If the gas station is in the search radius</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">in_radius</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">latitude_center</span><span class="p">,</span> <span class="n">longitude_center</span><span class="p">,</span> <span class="n">gas_latitude</span><span class="p">,</span> <span class="n">gas_longitude</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="p">(</span><span class="n">gas_latitude</span> <span class="o">&lt;=</span> <span class="n">radius</span> <span class="o">+</span> <span class="n">latitude_center</span>
+            <span class="ow">and</span> <span class="n">gas_longitude</span> <span class="o">&lt;=</span> <span class="n">radius</span> <span class="o">+</span> <span class="n">longitude_center</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">gas_latitude</span> <span class="o">&gt;=</span> <span class="n">radius</span> <span class="o">-</span> <span class="n">latitude_center</span>
+                                                                <span class="ow">and</span> <span class="n">gas_longitude</span> <span class="o">&lt;=</span> <span class="n">radius</span> <span class="o">-</span> <span class="n">longitude_center</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Normalize a string without [],\n\</p>
+<p>Parameters</p>
+<hr />
+<p>msg: str
+       A string to be normalized</p>
+<p>Returns</p>
+<hr />
+<p>list
+       A string normalized without [,] &lsquo; \n \ characters</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">normalize_list_str</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">msg</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">msg</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
