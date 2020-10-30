@@ -268,7 +268,7 @@ def check_ship_destroyed(coordinates):
     ship_destroyed = is_ship_destroyed(ship)
 
     if ship_destroyed:
-        # global n_ships
+        global n_ships
         n_ships = n_ships - 1
 
     return ship_destroyed

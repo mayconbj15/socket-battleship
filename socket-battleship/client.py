@@ -188,18 +188,21 @@ while msg != 'q':
                 if args.debug:
                     bd.print_board()
 
-                shot = get_shot(response)
-                hit = bd.shot_ship(shot)
+                if response != 'you win':
+                    shot = get_shot(response)
+                    hit = bd.shot_ship(shot)
 
-                if hit:
-                    ship_destroyed = bd.check_ship_destroyed(shot)
+                    if hit:
+                        ship_destroyed = bd.check_ship_destroyed(shot)
 
-                    if ship_destroyed:
-                        print('SHIP DESTROYED')
-                        end_game = bd.check_end_game()
-                        if end_game:
-                            print('END OF GAME')
-                            tcp_sock.close()
+                        if ship_destroyed:
+                            print('SHIP DESTROYED')
+                            end_game = bd.check_end_game()
+                            if end_game:
+                                print('END OF GAME')
+                                tcp_sock.close()
+                else:
+                    print('You win!')
             else:
                 print('Server error')
     else:
